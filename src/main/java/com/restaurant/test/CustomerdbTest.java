@@ -2,26 +2,41 @@ package com.restaurant.test;
 
 import java.util.Iterator;
 
-import com.restaurant.dbutils.Customerdb;
+
+import com.restaurant.utils.Print;
+import com.restaurant.dbutils.users.Customerdb;
 import com.restaurant.users.Customer;
 
 public class CustomerdbTest {
-	public static <T> void print(T msg) {
-		System.out.println(msg);
-	}
 
 	public static void main(String[] args) {
 		Customerdb cus = new Customerdb();
+
 		// testing get all customers
-		Iterator it = cus.getAll().listIterator();
+		Print.s("\nGetting all customers data");
+		Iterator<Customer> it = cus.getAll().listIterator();
 		while (it.hasNext()) {
-			print(((Customer) it.next()).getEmail());
+			Print.s(((Customer) it.next()).getEmail());
 		}
 
 		// testing create customer
-		print(cus.createcustomer(new Customer("Josh", "Yid", "096007670", "joshua@gmail.com", "hacker")));
+		Print.s("\nCreating new customer");
+		Print.s(cus.createcustomer(new Customer("Josh", "Yid", "0960yyyyxxx", "jogmail.com", "hacker")));
+
+		// testing get customer with email
+		Print.s("\nGetting customer with email");
+		Print.s(cus.getCustomer("joshiii@gmail.com"));
 		
-		print(cus.getCustomer("josh@gmail.com").getFname());
+		// testing update customer with email
+		Print.s("\nUpdating customer with email");
+		Print.s(cus.updateCustomer(new Customer("Joshua", "Yid", "0000000", "joshiii@gmail.com", "thehacker")));
+		
+		// testing delete customer with email
+		Print.s("\nDeleting customer with email");
+		Print.s(cus.deleteCustomer("joshiii@gmail.com"));
+		
+		// closing the database connections
+		Print.s("\nconnection closed!");
 		cus.close();
 	}
 

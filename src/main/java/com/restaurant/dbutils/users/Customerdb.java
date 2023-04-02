@@ -1,10 +1,12 @@
-package com.restaurant.dbutils;
+package com.restaurant.dbutils.users;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.restaurant.utils.Print;
 import com.restaurant.users.Customer;
+import com.restaurant.dbutils.DBhelper;
 import com.restaurant.security.PasswordHash;
 
 public class Customerdb extends DBhelper {
@@ -36,7 +38,7 @@ public class Customerdb extends DBhelper {
 			// return the customers array list
 			return customers;
 		} catch (SQLException e) {
-			System.err.println("[ERROR] Failed to get Customers data!");
+			Print.se("[ERROR] Failed to get Customers data!");
 			e.printStackTrace();
 			return null;
 		}
@@ -57,11 +59,10 @@ public class Customerdb extends DBhelper {
 			pstm.setString(5, hash.generateStorngPasswordHash(customer.getHashpwd()));
 			// executing prepared statement
 			pstm.execute();
-			System.out.println("[OK] " + customer.getFname() + "'s account created!");
 			return true;
 		} catch (SQLException e) {
-			System.err.println("[ERROR] Failed to create an account!");
-			System.out.println("Try different email address or phone number.");
+			Print.se("[ERROR] Failed to create an account!");
+			Print.s("Try different email address or phone number.");
 			return false;
 		}
 	}
@@ -76,7 +77,7 @@ public class Customerdb extends DBhelper {
 			pstm.setString(1, email);;
 			// get result from database
 			rs = pstm.executeQuery();
-			// create User object from the data
+			// create customer object from the data
 			if (rs.next()) {
 				return new Customer(
 						rs.getInt(1),
@@ -89,9 +90,66 @@ public class Customerdb extends DBhelper {
 			}
 			return null;
 		} catch (SQLException e) {
-			System.err.println("[ERROR] Failed to get customer data!");
+			Print.se("[ERROR] Failed to get customer data!");
+			Print.s("Customer doesn't exists!");
 			return null;
 		}
+	}
+	
+	public boolean updateCustomer(Customer customer) {
+		// checking the use exists
+		if (checkCustomer(customer.getEmail()) == false) {
+			Print.s("Customer doesn't exists!");
+			return false;
+		}
+		// SQL statement
+		sql = "UPDATE " + table + " SET fname=?, lname=?, "
+		+"phone=?, email=?, hashpwd=? WHERE email=?";
+		try {
+			// create prepare statement
+			pstm = con.prepareStatement(sql);
+			// sent data to prepare statement
+			pstm.setString(1, customer.getFname());
+			pstm.setString(2, customer.getLname());
+			pstm.setString(3, customer.getPhone());
+			pstm.setString(4, customer.getEmail());
+			pstm.setString(5, hash.generateStorngPasswordHash(customer.getHashpwd()));
+			pstm.setString(6, customer.getEmail());
+			// execute prepare statement
+			pstm.execute();
+			return true;
+		} catch (SQLException e) {
+			Print.se("[ERROR] Failed to update a customer!");
+			return false;
+		}
+	}
+
+	public boolean deleteCustomer(String email) {
+		// checking the use exists
+		if (checkCustomer(email) == false) {
+			Print.s("Customer doesn't exists!");
+			return false;
+		}
+		sql = "DELETE FROM " + table + " WHERE email=?";
+		try {
+			// create prepare statement
+			pstm = con.prepareStatement(sql);
+			// passing the email to prepared statement
+        	pstm.setString(1, email);;
+			// execute prepare statement
+			pstm.execute();;
+			return true;
+		} catch (SQLException e) {
+			Print.se("[ERROR] Failed to delete customer!");
+			return false;
+		}
+	}
+	
+	public boolean checkCustomer(String email) {
+		if (getCustomer(email) != null) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean close() {
@@ -110,7 +168,7 @@ public class Customerdb extends DBhelper {
 			}
 			return true;
 		} catch (SQLException e) {
-			System.err.println("[Error] con is already closed!");
+			Print.se("[Error] connection is already closed!");
 			return false;
 		}
 
