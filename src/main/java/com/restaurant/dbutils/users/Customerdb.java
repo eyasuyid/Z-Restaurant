@@ -152,6 +152,16 @@ public class Customerdb extends DBhelper {
 		return false;
 	}
 	
+	public Customer validCustomer(String email, String password) {
+		Customer cus = getCustomer(email);
+		if (cus != null) {
+			if (hash.validatePassword(password, cus.getHashpwd())) {
+				return cus;
+			}
+		}
+		return null;
+	}
+	
 	public boolean close() {
 		try {
 			if (con != null) {
