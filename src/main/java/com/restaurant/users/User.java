@@ -12,6 +12,14 @@ public class User {
 		this.hashpwd = hashpwd;
 	}
 	
+	public User(String fname, String lname, String phone, String email) {
+		super();
+		this.fname = fname;
+		this.lname = lname;
+		this.phone = phone;
+		this.email = email;
+	}
+	
 	public User() {
 		super();
 	}

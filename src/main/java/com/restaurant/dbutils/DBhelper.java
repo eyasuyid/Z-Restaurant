@@ -18,14 +18,15 @@ public class DBhelper {
 	protected ResultSet rs;
 	protected String sql;
 	protected String table;
-	
-	protected DBhelper() {
+
+	protected DBhelper(String table) {
 		try {
 			// register MYSQL JDBC driver
 			Class.forName(reg);
 			// create a connection
 			con = DriverManager.getConnection(host, user, password);
 			System.out.println("[OK] database connected!");
+			this.table = table;
 		} catch (SQLException e) {
 			System.err.println("[ERROR] Failed to connect with database!");
 		} catch (Exception e) {
