@@ -44,6 +44,10 @@ public class Auth extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+		String con = "/Restaurant/home.jsp";
+		if (request.getParameter("continue") != null) {
+			con = request.getParameter("continue");
+		}
 		HttpSession session = request.getSession();
 		
 		Customerdb cdb = new Customerdb();
@@ -54,7 +58,7 @@ public class Auth extends HttpServlet {
 			rd.forward(request, response);
 		} else {
 			session.setAttribute("customer", cus);
-			response.sendRedirect("/Restaurant/home.jsp");
+			response.sendRedirect(con);
 		}
 	}
 }

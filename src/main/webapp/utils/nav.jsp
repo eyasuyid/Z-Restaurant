@@ -15,19 +15,24 @@
           <a class="nav-link" href="/Restaurant/menu.jsp">Menu</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Delivery</a>
+          <a class="nav-link" href="/Restaurant/delivery.jsp">Delivery</a>
         </li>
 		<li class="nav-item">
-          <a class="nav-link" href="#">Reservation</a>
+          <a class="nav-link" href="/Restaurant/reservation.jsp">Reservation</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Account
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/Restaurant/user/signin.jsp">Sign in</a></li>
-            <li><a class="dropdown-item" href="/Restaurant/user/signup.jsp">Sign up</a></li>
-            <li><a class="dropdown-item" href="/Restaurant/user/signout.jsp">Sign out</a></li>
+          	<%
+          		if (session.getAttribute("customer") == null) {
+          			out.print("<li><a class='dropdown-item' href='/Restaurant/user/signin.jsp'>Sign in</a></li>");
+          			out.print("<li><a class='dropdown-item' href='/Restaurant/user/signup.jsp'>Sign up</a></li>");
+          		} else {
+          			out.print("<li><a class='dropdown-item' href='/Restaurant/user/signout.jsp'>Sign out</a></li>");
+          		}
+          	%>
           </ul>
         </li>
       </ul>

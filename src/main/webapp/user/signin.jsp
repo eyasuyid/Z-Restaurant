@@ -95,6 +95,13 @@
   <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
     <form method="POST" action="/Restaurant/auth">
     <input type="hidden" name="role" value="customer">
+    <%
+    	if (request.getParameter("continue") != null) {
+    	    %>
+    	    <input type='hidden' name='continue' value=<%= request.getParameter("continue")%> />
+    	    <%
+    	}
+    %>
       <!-- Email input -->
       <div class="form-outline mb-4">
         <input type="email" id="loginName" class="form-control" name="email" required />
