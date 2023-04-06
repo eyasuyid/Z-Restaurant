@@ -1,0 +1,85 @@
+CREATE TABLE `Customer`(
+    `cid` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `fname` VARCHAR(255) NOT NULL,
+    `lname` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255) NULL DEFAULT 'n/a' UNIQUE,
+    `email` VARCHAR(255) NOT NULL UNIQUE,
+    `hashpwd` VARCHAR(500) NOT NULL
+);
+
+CREATE TABLE `Menu`(
+    `mid` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `catid` INT UNSIGNED NOT NULL,
+    `mname` VARCHAR(255) NOT NULL,
+    `image` VARCHAR(1000) NOT NULL,
+    `price` DOUBLE(8, 2) NOT NULL,
+    `desc` VARCHAR(255) NULL DEFAULT 'n/a',
+    `quantity` INT NOT NULL
+);
+
+CREATE TABLE `Table`(
+    `tid` INT UNSIGNED NOT NULL  PRIMARY KEY,
+    `status` VARCHAR(255) NOT NULL,
+    `psize` INT NOT NULL
+);
+
+CREATE TABLE `Category`(
+    `catid` INT UNSIGNED NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+    `cname` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `Delivery`(
+    `did` INT UNSIGNED NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+    `oid` INT UNSIGNED NOT NULL,
+    `dmid` INT UNSIGNED NOT NULL,
+    `dtime` TIMESTAMP NOT NULL,
+    `address` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `Order Info`(
+    `oid` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `cid` INT UNSIGNED NOT NULL,
+    `time` TIMESTAMP NOT NULL,
+    `type` VARCHAR(255) NOT NULL,
+    `tprice` DOUBLE(8, 2) NOT NULL
+);
+
+CREATE TABLE `Reservation`(
+    `rid` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `oid` INT UNSIGNED NOT NULL,
+    `tid` INT UNSIGNED NOT NULL,
+    `rtime` TIMESTAMP NOT NULL,
+    `psize` INT NOT NULL DEFAULT '1'
+);
+
+CREATE TABLE `Employee`(
+    `eid` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `fname` VARCHAR(255) NOT NULL,
+    `lname` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255) NOT NULL DEFAULT 'n/a',
+    `email` VARCHAR(255) NOT NULL UNIQUE,
+    `hash` VARCHAR(500) NOT NULL UNIQUE,
+    `position` VARCHAR(255) NOT NULL,
+    `status` VARCHAR(255) NOT NULL,
+    `shift` VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `Order Items`(
+    `oid` INT UNSIGNED NOT NULL,
+    `mid` INT UNSIGNED NOT NULL,
+    `status` VARCHAR(255) NOT NULL DEFAULT 'pending'
+);
+ALTER TABLE
+    `Order Items` ADD CONSTRAINT `order items_oid_foreign` FOREIGN KEY(`oid`) REFERENCES `Order Info`(`oid`) ON DELETE CASCADE;
+ALTER TABLE
+    `Order Info` ADD CONSTRAINT `order info_cid_foreign` FOREIGN KEY(`cid`) REFERENCES `Customer`(`cid`) ON DELETE CASCADE;
+ALTER TABLE
+    `Reservation` ADD CONSTRAINT `reservation_tid_foreign` FOREIGN KEY(`tid`) REFERENCES `Table`(`tid`) ON DELETE CASCADE;
+ALTER TABLE
+    `Reservation` ADD CONSTRAINT `reservation_oid_foreign` FOREIGN KEY(`oid`) REFERENCES `Order Info`(`oid`) ON DELETE CASCADE;
+ALTER TABLE
+    `Menu` ADD CONSTRAINT `menu_catid_foreign` FOREIGN KEY(`catid`) REFERENCES `Category`(`catid`) ON DELETE CASCADE;
+ALTER TABLE
+    `Order Items` ADD CONSTRAINT `order items_mid_foreign` FOREIGN KEY(`mid`) REFERENCES `Menu`(`mid`) ON DELETE CASCADE;
+ALTER TABLE
+    `Delivery` ADD CONSTRAINT `delivery_oid_foreign` FOREIGN KEY(`oid`) REFERENCES `Order Info`(`oid`) ON DELETE CASCADE;
